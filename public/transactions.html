@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<!--
+Code adapted from sample HTML page provided by Oregon State University, CS 340 - Databases.
+URL: https://canvas.oregonstate.edu/courses/1967354/files/105926943?wrap=1
+Date Accessed: July 31, 2024
+-->
+
+<html>
+<head>
+<title>Transactions</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newTransaction() { showform('insert'); }
+    function updateTransaction(transactionID) {
+      /* Pre-Populate form with data from selected record */
+      let row = document.getElementById(`transaction-${transactionID}`);
+      let transactionID_field = document.getElementById("update_transactionID");
+      let date_field = document.getElementById("update-date");
+      let price_field = document.getElementById("update-price");
+
+      transactionID_field.value = row.getAttribute("transactionID");
+      date_field.value = row.getAttribute("date");
+      price_field.value = row.getAttribute("price");
+
+      showform('update');
+    };
+    function deleteTransaction(transactionID) {
+      /* Pre-Populate form with data from selected record */
+      let row = document.getElementById(`transaction-${transactionID}`);
+      let transactionID_field = document.getElementById("delete_transactionID");
+      let buyer_field = document.getElementById("delete_buyer");
+      let property_field = document.getElementById("delete_property");
+      let date_field = document.getElementById("delete_date");
+      let price_field = document.getElementById("delete_price");
+
+      transactionID_field.value = row.getAttribute("transactionID");
+      buyer_field.value = row.getAttribute("buyerName");
+      property_field.value = row.getAttribute("propertyAddress");
+      date_field.value = row.getAttribute("date");
+      price_field.value = row.getAttribute("price");
+
+      showform ('delete');
+    };
+    function browseTransactions() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseTransactions()">
+<h1>Superior Real Estate Agency</h1>
+<h2>Database Administration - Transactions</h2>
+
+[ <a href="/">Home</a> | <a href="buyers.html">Buyers</a> | <a href="sellers.html">Sellers</a> | <a href="agents.html">Agents</a> | <a href="properties.html">Properties</a> | <a href="transactions.html">Transactions</a> ]
+
+<div id="browse">
+<p></p>
+<table border="1" cellpadding="5" id="transaction-table">
+  <thead>
+    <tr id="transaction-table-headers">
+      <th><a href="#" onClick="newTransaction()">New</a></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="transaction-table-body">
+  </tbody>
+</table>
+<script src="./js/retrieve_transactions.js"></script>
+
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert">
+    <form method="POST" id="add-transaction-form">
+      <fieldset class="fields">
+        <legend><strong>Add Transaction</strong></legend>
+            <label> Buyer </label>
+              <select name="buyerID" id="buyer_select_add">
+                <option value="">&nbsp;</option>
+              </select>
+            <label> Property </label>
+              <select name="propertyID" id="property_select_add">
+                <option value="">&nbsp;</option>
+              </select>
+            <label> Date </label> <input type="date" name="date" id="input-date">
+            <label> Price </label> <input type="number" name="price" id="input-price">
+      </fieldset>
+          <input class="btn" type="submit" id="AddTransactionBtn" value="Add Transaction">
+          <input class="btn" type="button" value="Cancel" onClick="browseTransactions()">
+	  </form>
+    <script src="./js/add_transaction.js"></script>
+</div><!-- insert -->
+<p>&nbsp;</p>
+<div id="update">
+    <form method="POST" id="update-transaction-form">
+      <fieldset class="fields">
+        <legend><strong>Update Transaction</strong></legend>
+          <label> transactionID </label> <input type="text" name="transactionID" id="update_transactionID" readonly>
+          <label> Buyer </label>
+            <select name="buyerID" id="buyer_select_update">
+              <option value="">&nbsp;</option>
+            </select>
+          <label> Property </label>
+            <select name="propertyID" id="property_select_update">
+              <option value="">&nbsp;</option>
+            </select>
+          <label> Date </label> <input type="date" name="date" id="update-date">
+          <label> Price </label> <input type="number" name="price" id="update-price">
+      </fieldset>
+          <input class="btn" type="submit" id="UpdateTransactionBtn" value="Update Transaction">
+          <input class="btn" type="button" value="Cancel" onClick="browseTransactions()">
+	</form> 
+  <script src="./js/update_transaction.js"></script>
+</div><!-- update -->
+<p>&nbsp;</p>
+<div id="delete" style="display: block">
+  <form method="POST" id="delete-transaction-form">
+    <fieldset class="fields">
+      <legend><strong>Delete Transaction</strong></legend>
+          <p>Are you sure you wish to delete the following?</p>
+          <label> <strong>ID:</strong></label> <input type="text" name="transactionID"  id="delete_transactionID" readonly>
+          <label> <strong>Buyer</strong> </label> <input type="text" name="deleteBuyer" id="delete_buyer" readonly>
+          <label> <strong>Property</strong> </label> <input type="text" name="deleteProperty" id="delete_property" readonly>
+          <label> <strong>Date</strong> </label> <input type="date" name="deleteDate" id="delete_date" readonly>
+          <label> <strong>Price</strong> </label> <input type="number" name="deletePrice" id="delete_price" readonly>
+            
+    </fieldset>
+    <input class="btn" type="submit" id="DeleteTransactionBtn" value="Delete Transaction">
+          <input class="btn" type="button" value="Cancel" onClick="browseTransactions()">
+  </form> 
+  <script src="./js/delete_transaction.js"></script>
+</div><!-- delete -->
+
+</body>
+</html>

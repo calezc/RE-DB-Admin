@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<!--
+Code adapted from sample HTML page provided by Oregon State University, CS 340 - Databases.
+URL: https://canvas.oregonstate.edu/courses/1967354/files/105926943?wrap=1
+Date Accessed: July 31, 2024
+-->
+
+<html>
+<head>
+<title>Properties</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newProperty() { showform('insert'); }
+    function updateProperty(propertyID) {
+      /* Pre-Populate form with data from selected record */
+      let row = document.getElementById(`property-${propertyID}`);
+      let propertyID_field = document.getElementById("update_propertyID");
+      let address_field = document.getElementById("update-address");
+
+      propertyID_field.value = row.getAttribute("propertyID");
+      address_field.value = row.getAttribute("address");
+
+      showform('update');
+    };
+    function deleteProperty(propertyID) {
+      /* Pre-Populate form with data from selected record */
+      let row = document.getElementById(`property-${propertyID}`);
+      let propertyID_field = document.getElementById("delete_propertyID");
+      let address_field = document.getElementById("delete_address");
+
+      propertyID_field.value = row.getAttribute("propertyID");
+      address_field.value = row.getAttribute("address");
+
+      showform ('delete');
+    };
+    function browseProperties() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseProperties()">
+<h1>Superior Real Estate Agency</h1>
+<h2>Database Administration - Properties</h2>
+
+[ <a href="/">Home</a> | <a href="buyers.html">Buyers</a> | <a href="sellers.html">Sellers</a> | <a href="agents.html">Agents</a> | <a href="properties.html">Properties</a> | <a href="transactions.html">Transactions</a> ]
+
+<div id="browse">
+<p></p>
+<table border="1" cellpadding="5" id="property-table">
+  <thead>
+    <tr id="property-table-headers">
+      <th><a href="#" onClick="newProperty()">New</a></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="property-table-body">
+  </tbody>
+</table>
+<script src="./js/retrieve_properties.js"></script>
+
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert">
+    <form method="POST" id="add-property-form">
+      <fieldset class="fields">
+        <legend><strong>Add Property</strong></legend>
+            <label> Seller </label>
+              <select name="sellerID" id="seller_select_add">
+                <option value="">&nbsp;</option>
+              </select>
+            <label> Address </label> <input type="text" name="address" id="input-address">
+      </fieldset>
+          <input class="btn" type="submit" id="AddPropertyBtn" value="Add Property">
+          <input class="btn" type="button" value="Cancel" onClick="browseProperties()">
+	  </form>
+    <script src="./js/add_property.js"></script>
+</div><!-- insert -->
+<p>&nbsp;</p>
+<div id="update">
+    <form method="POST" id="update-property-form">
+      <fieldset class="fields">
+        <legend><strong>Update Property</strong></legend>
+          <label> propertyID </label> <input type="text" name="propertyID" id="update_propertyID" readonly>
+          <label> Seller </label>
+            <select name="sellerID" id="seller_select_update">
+              <option value="">&nbsp;</option>
+            </select>
+          <label> Address </label> <input type="text" name="address" id="update-address">
+      </fieldset>
+          <input class="btn" type="submit" id="UpdatePropertyBtn" value="Update Property">
+          <input class="btn" type="button" value="Cancel" onClick="browseProperties()">
+	</form> 
+  <script src="./js/update_property.js"></script>
+</div><!-- update -->
+<p>&nbsp;</p>
+<div id="delete" style="display: block">
+  <form method="POST" id="delete-property-form">
+    <fieldset class="fields">
+      <legend><strong>Delete Property</strong></legend>
+          <p>Are you sure you wish to delete the following?</p>
+          <label> <strong>ID:</strong></label> <input type="text" name="propertyID"  id="delete_propertyID" readonly>
+          <label> <strong>Address</strong> </label> <input type="text" name="deleteAddress" id="delete_address" readonly>
+            
+    </fieldset>
+    <input class="btn" type="submit" id="DeletePropertyBtn" value="Delete Property">
+          <input class="btn" type="button" value="Cancel" onClick="browseProperties()">
+  </form> 
+  <script src="./js/delete_property.js"></script>
+</div><!-- delete -->
+
+</body>
+</html>

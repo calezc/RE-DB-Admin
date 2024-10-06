@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<!--
+Code adapted from sample HTML page provided by Oregon State University, CS 340 - Databases.
+URL: https://canvas.oregonstate.edu/courses/1967354/files/105926943?wrap=1
+Date Accessed: July 31, 2024
+-->
+
+<html>
+<head>
+<title>Agents</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript">
+		function showform(dowhat) {
+			/*
+			* four DIVS: browse, insert, update, delete
+			* this function sets one visible the others not
+			*/
+			if (dowhat == 'insert'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'update'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'none';
+			}
+			else if (dowhat == 'delete'){
+				document.getElementById('browse').style.display = 'none';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'block';
+			}
+      else if (dowhat == 'all'){
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'block';
+				document.getElementById('update').style.display = 'block';
+				document.getElementById('delete').style.display = 'block';
+			}
+			else { //by default display browse
+				document.getElementById('browse').style.display = 'block';
+				document.getElementById('insert').style.display = 'none';
+				document.getElementById('update').style.display = 'none';
+				document.getElementById('delete').style.display = 'none';
+			}
+		}
+    function newAgent() { showform('insert'); }
+    function updateAgent(agentID) {
+      /* Pre-Populate form with data from selected record */
+      let row = document.getElementById(`agent-${agentID}`);
+      let agentID_field = document.getElementById("update_agentID");
+      let fName_field = document.getElementById("update_firstName");
+      let lName_field = document.getElementById("update_lastName");
+      let email_field = document.getElementById("update_email");
+      let phone_field = document.getElementById("update_phone");
+
+      agentID_field.value = row.getAttribute("agentID");
+      fName_field.value = row.getAttribute("agentFirstName");
+      lName_field.value = row.getAttribute("agentLastName");
+      email_field.value = row.getAttribute("agentEmail");
+      phone_field.value = row.getAttribute("agentPhone");
+
+      showform('update');
+    };
+    function deleteAgent(agentID) {
+      /* Pre-Populate form with data from selected record */
+      let row = document.getElementById(`agent-${agentID}`);
+      let agentID_field = document.getElementById("delete_agentID");
+      let name_field = document.getElementById("delete_name");
+
+      agentID_field.value = row.getAttribute("agentID");
+      name_field.value = row.getAttribute("agentFirstName") + " " + row.getAttribute("agentLastName");
+
+      showform ('delete');
+    };
+    function browseAgents() { showform ('browse'); }
+    function showAll() { showform ('all'); }
+</script>
+</head>
+
+<body onload="browseAgents()">
+<h1>Superior Real Estate Agency</h1>
+<h2>Database Administration - Agents</h2>
+
+[ <a href="/">Home</a> | <a href="buyers.html">Buyers</a> | <a href="sellers.html">Sellers</a> | <a href="agents.html">Agents</a> | <a href="properties.html">Properties</a> | <a href="transactions.html">Transactions</a> ]
+
+<div id="browse">
+<p></p>
+<table border="1" cellpadding="5" id="agent-table">
+  <thead>
+    <tr id="agent-table-headers">
+      <th><a href="#" onClick="newAgent()">New</a></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="agent-table-body">
+  </tbody>
+</table>
+<script src="./js/retrieve_agents.js"></script>
+
+<p>&nbsp;</p>
+</div> <!-- browse -->
+<div id="insert">
+    <form method="POST" id="add-agent-form">
+      <fieldset class="fields">
+        <legend><strong>Add Agent</strong></legend>
+            <label> First Name </label> <input type="text" name="firstName" id="input-firstName">
+            <label> Last Name </label> <input type="text" name="lastName" id="input-lastName">
+            <label> Email </label> <input type="text" name="email" id="input-email">
+            <label> Phone </label> <input type="text" name="phone" id="input-phone">
+      </fieldset>
+          <input class="btn" type="submit" id="AddAgentBtn" value="Add Agent">
+          <input class="btn" type="button" value="Cancel" onClick="browseAgents()">
+	  </form>
+    <script src="./js/add_agent.js"></script>
+</div><!-- insert -->
+<p>&nbsp;</p>
+<div id="update">
+    <form method="POST" id="update-agent-form">
+      <fieldset class="fields">
+        <legend><strong>Update Agent</strong></legend>
+          <label> agentID </label> <input type="text" name="agentID" id="update_agentID" readonly>
+          <label> First Name </label> <input type="text" name="firstName" id="update_firstName">
+          <label> Last Name </label> <input type="text" name="lastName" id="update_lastName">
+          <label> Email </label> <input type="text" name="email" id="update_email">
+          <label> Phone </label> <input type="text" name="phone" id = "update_phone">
+      </fieldset>
+          <input class="btn" type="submit" id="UpdateAgentBtn" value="Update Agent">
+          <input class="btn" type="button" value="Cancel" onClick="browseAgents()">
+	</form> 
+  <script src="./js/update_agent.js"></script>
+</div><!-- update -->
+<p>&nbsp;</p>
+<div id="delete" style="display: block">
+  <form method="POST" id="delete-agent-form">
+    <fieldset class="fields">
+      <legend><strong>Delete Agent</strong></legend>
+          <p>Are you sure you wish to delete the following?</p>
+          <label><strong>ID:</strong></label> <input type="text" name="agentID"  id="delete_agentID" readonly>
+          <label> <strong>Name</strong> </label> <input type="text" name="firstName" id="delete_name" readonly>
+            
+    </fieldset>
+    <input class="btn" type="submit" id="DeleteAgentBtn" value="Delete Agent">
+          <input class="btn" type="button" value="Cancel" onClick="browseAgents()">
+  </form> 
+  <script src="./js/delete_agent.js"></script>
+</div><!-- delete -->
+
+</body>
+</html>
